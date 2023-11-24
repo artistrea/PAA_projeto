@@ -72,7 +72,7 @@
   }
 
   const nodeTypes = {
-    "": CustomNode
+    "": CustomNode,
   }
 </script>
 

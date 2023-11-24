@@ -13,6 +13,7 @@ type OurNode = Omit<Node, "position"> & {
     route?: string;
   };
 };
+
 export const nodes = writable<OurNode[]>(initialTreeData);
 
 export type TreeNode = {

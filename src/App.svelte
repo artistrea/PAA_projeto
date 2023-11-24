@@ -2,7 +2,7 @@
   import Akinator from './components/Akinator.svelte';
   import EditingNode from './components/EditingNode.svelte';
   import TreeView from './components/TreeView.svelte';
-  import { ArrowLeft } from 'lucide-svelte';
+  import { ArrowLeft, Edit } from 'lucide-svelte';
   
   let shownView:  "viewTree" | "akinator" | "editingNode" = "akinator";
 
@@ -13,7 +13,7 @@
 <section class="wrapper">
   <Akinator />
   <button class="open-button" on:click={() => shownView = "viewTree"}>
-    Edit
+    <Edit /> Editar árvore
   </button>
 </section>
 {/if}
@@ -22,7 +22,7 @@
 <main class="wrapper">
   <TreeView bind:selectedNodeId bind:shownView />
   <button class="back-button" on:click={() => shownView = "akinator"}>
-    <ArrowLeft />
+    <ArrowLeft size={24} />
   </button>
 </main>
 {/if}
@@ -31,7 +31,7 @@
 <section class="wrapper">
   <EditingNode nodeId={selectedNodeId} />
   <button class="back-button" on:click={() => shownView = "viewTree"}>
-    <ArrowLeft />
+    <ArrowLeft size={24} />
   </button>
 </section>
 {/if}
@@ -58,11 +58,10 @@
   }
 
   .open-button {
-    height: 2rem;
-    width: 2rem;
+    padding: 1rem;
     font-size: 1.3rem;
     border: none;
-    background-color: blue;
+    background-color: rgb(0,200,100);
     color: blanchedalmond;
     z-index: 999;
   }

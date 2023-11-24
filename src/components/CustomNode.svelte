@@ -1,7 +1,9 @@
 <script lang="ts">
-    import { Handle, Position } from '@xyflow/svelte';
+    import { Handle, Position, type NodeProps } from '@xyflow/svelte';
   
-    export let data: any;
+    type $$Props = NodeProps;
+  
+    export let data: $$Props['data'];
 </script>
 
 <Handle
