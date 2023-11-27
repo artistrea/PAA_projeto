@@ -18,7 +18,7 @@ export function textToInfoParser(text: string) {
     let symptom : string
     for(const attr of attrs){
       aux = attr.split("NOT ")
-      symptom = aux[aux.length-1]
+      symptom = aux[aux.length-1].slice(2)
       allKeys.add(symptom)
       rule[symptom] = !((negation?1:0) ^ (aux[0]===""?1:0))
     }
