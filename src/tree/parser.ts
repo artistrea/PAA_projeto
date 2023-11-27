@@ -1,40 +1,43 @@
 export function textToInfoParser(text: string) {
   let lines = data.split('\n').map((l)=>l.trim())
-  type Node = {[key: string] : string | number | boolean}
-  let nodes : Array<Node> = []
+  type Rule = {[key: string] : string | number | boolean}
+  const rules : Array<Rule> = []
+  const allKeys : Set<string> = new Set(["name", "type", "p"])
 
   for(const line of lines){
-    const node : Node = {}
-
+    const rule : Rule = {}
     let [leaf, params] = line.split(/,(.*)/).map((s)=>s.replace(/["“”]/g, '').trim())
     let [symptoms, prob] = params.split("),").map((s)=>s.replace(/["“”]/g, '').trim())
-    //node.p = parseFloat(prob) => TODO: concerta inconsistencias baseadas na p
-    let type = leaf[0];
-    node.name = leaf.slice(2);
+    rule.p = parseFloat(prob)
+    const type = leaf[0];
+    rule.name = leaf.slice(2);
     let [condition, attrsStr] = symptoms.split("(").map((s)=>s.trim())
-    let negation : boolean = (condition === "NOT")
-    let attrs = attrsStr.split(', ')
-    
+    const negation : boolean = (condition === "NOT")
+    const attrs = attrsStr.split(', ')
+    let aux : Array<string>
+    let symptom : string
     for(const attr of attrs){
-      let aux = attr.split("NOT ")
-      let symptom = aux[aux.length-1]
-      node[symptom] = !((negation?1:0) ^ (aux[0]===""?1:0))
+      aux = attr.split("NOT ")
+      symptom = aux[aux.length-1]
+      allKeys.add(symptom)
+      rule[symptom] = !((negation?1:0) ^ (aux[0]===""?1:0))
     }
     switch(type){
       case 'C':
-        node.type = 'C'
+        rule.type = 'C'
       break;
       case 'S':
-        node.type = 'S'
+        rule.type = 'S'
       break;
       default:
-        //alert("Erro") // cuidado com quebra de linha no final do arq
+        alert("Erro") // cuidado com quebra de linha no final do arq
       break;
     }
-    nodes.push(node)
+    rules.push(rule)
+    
   }
-
-  return nodes
+  
+  return { rules, allKeys }
 }
 
 
