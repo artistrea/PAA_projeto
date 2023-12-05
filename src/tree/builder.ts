@@ -1,4 +1,4 @@
-import type { Node, TreeNode } from "../store/graph";
+import type { Node } from "../store/graph";
 
 const nodesMock: Node[] = [
   {
@@ -122,63 +122,53 @@ function calculateInformationGain(data: any[], feature: string): number {
 }
 
 export type TreeNode = {
-  feature: string;
+  symptom: string;
   id: string;
   parentId: string;
-  route: string;
-  type: "step";
-  children?: TreeNode[];
+  type: "step" | "leaf";
 };
 
-
-function buildDecisionTree(data: any[]): TreeNode {
+function buildDecisionTree(data: any[], parentId: string): TreeNode {
   // Base case: If all instances have the same class, create a leaf node
+  const id = Date.now().toString()
   const uniqueClasses = Array.from(new Set(data.map((item) => item.label)));
   if (uniqueClasses.length === 1) {
-    return { type: "leaf", label: uniqueClasses[0] };
+    return {symptom: uniqueClasses[0] , id: id, parentId: parentId, type: "leaf" };
   }else if (evaluateProbability(data)){
-    return { type: "leaf", label: mostProbable(data) };
+    return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
   
     //Get list of features -- Decidir se isso vem antes ou eh feito para cada construcao 
-    const uniqueFeatures = new Set<string>();
+    const uniqueSymptom = new Set<string>();
 
     for (const dataPoint of data) {
-      for (const feature in dataPoint) {
-        if (feature[2] == 'C ' || feature[2] == 'S ') {
-          uniqueFeatures.add(feature);
-        }
+      for (const symptom in dataPoint) {
+        uniqueSymptom.add(symptom);
       }
   
   // Find the best split based on information gain
   let bestGain = -1;
-  let bestFeature: string | undefined;
+  let bestSymptom: string | undefined;
 
   // Iterate through each feature
-  for (const feature in uniqueFeatures) {
-      const gain = calculateInformationGain(data, feature);
+  for (const symptom in uniqueSymptom) {
+      const gain = calculateInformationGain(data, symptom);
 
       if (gain > bestGain) {
         bestGain = gain;
-        bestFeature = feature;
+        bestSymptom = symptom;
       }
 
   }
 
   // Base case: If no split improves information gain, create a leaf node
   if (bestGain === 0) {
-    const majorityClass = uniqueClasses.reduce((a, b) =>
-      data.filter((item) => item.label === a).length >
-      data.filter((item) => item.label === b).length
-        ? a
-        : b
-    );
-    return { type: "leaf", label: majorityClass };
+    return { type: "leaf", symptom: mostProbable(data) };
   }
 
   // Split the data based on the best feature and threshold
-  const leftData = data.filter((item) => item[bestFeature!] <= bestThreshold!);
-  const rightData = data.filter((item) => item[bestFeature!] > bestThreshold!);
+  const leftData = data.filter((item) => item[bestSymptom!] <= bestThreshold!);
+  const rightData = data.filter((item) => item[bestSymptom!] > bestThreshold!);
 
   // Recursively build the left and right subtrees
   const left = buildDecisionTree(leftData);
@@ -186,7 +176,7 @@ function buildDecisionTree(data: any[]): TreeNode {
 
   return {
     type: "step",
-    feature: bestFeature!,
+    symptom: bestSymptom!,
     left,
     right,
   };
