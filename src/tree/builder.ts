@@ -111,7 +111,7 @@ export function treeBuilder(currentInfo: any): Node[] {
   return nodesMock;
 }
 
-function calculateInformationGain(data: any[], feature: string): number {
+function calculateInformationGain(data: LogicSentence[], feature: string): number {
   // Implement your information gain calculation logic here
   // You'll need to calculate entropy before and after the split
   // Return the information gain value
@@ -121,72 +121,87 @@ function calculateInformationGain(data: any[], feature: string): number {
   return 0;
 }
 
+function evaluateProbability(data: LogicSentence[]): boolean {
+  return true }
+
+function mostProbable(data: LogicSentence[]): string {
+  return "feature escolhida" } 
+
+
+
 export type TreeNode = {
   symptom: string;
   id: string;
   parentId: string;
   type: "step" | "leaf";
+  children?: TreeNode[]
 };
 
-function buildDecisionTree(data: any[], parentId: string): TreeNode {
+
+type Atom = {
+  type: "cause" | "symptom";
+  label: string;
+};
+
+type LogicSentence = {
+  consequence: Atom;
+  parameters: (Atom & { value: boolean })[]; // ignore cause
+  probability: number;
+};
+
+function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
   // Base case: If all instances have the same class, create a leaf node
   const id = Date.now().toString()
-  const uniqueClasses = Array.from(new Set(data.map((item) => item.label)));
+  const uniqueClasses = Array.from(new Set(data.map((item) => item.consequence.label)));
   if (uniqueClasses.length === 1) {
     return {symptom: uniqueClasses[0] , id: id, parentId: parentId, type: "leaf" };
-  }else if (evaluateProbability(data)){
+  }else if (evaluateProbability(data)){ 
     return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
   
-    //Get list of features -- Decidir se isso vem antes ou eh feito para cada construcao 
-    const uniqueSymptom = new Set<string>();
 
-    for (const dataPoint of data) {
-      for (const symptom in dataPoint) {
-        uniqueSymptom.add(symptom);
-      }
-  
   // Find the best split based on information gain
   let bestGain = -1;
-  let bestSymptom: string | undefined;
+  let bestSymptom : string = ""
+
+
+  //Get list of features -- Decidir se isso vem antes ou eh feito para cada construcao 
+  
+  const uniqueParametersSet = new Set<Atom>();
+
+  data.forEach((sentence) => {
+    sentence.parameters.forEach((parameter) => {
+      uniqueParametersSet.add(parameter);
+    })});
+
 
   // Iterate through each feature
-  for (const symptom in uniqueSymptom) {
+  for (const symptom in uniqueParametersSet) {
       const gain = calculateInformationGain(data, symptom);
 
       if (gain > bestGain) {
         bestGain = gain;
         bestSymptom = symptom;
       }
-
   }
 
   // Base case: If no split improves information gain, create a leaf node
   if (bestGain === 0) {
-    return { type: "leaf", symptom: mostProbable(data) };
+    return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
 
-  // Split the data based on the best feature and threshold
-  const leftData = data.filter((item) => item[bestSymptom!] <= bestThreshold!);
-  const rightData = data.filter((item) => item[bestSymptom!] > bestThreshold!);
+  // Split the data based on the best feature 
+  const leftData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && !parameter.value ) 
+                                || !item.parameters.some( parameter => parameter.label == bestSymptom));
+  const rightData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && parameter.value ) 
+                                || !item.parameters.some( parameter => parameter.label == bestSymptom));
 
   // Recursively build the left and right subtrees
-  const left = buildDecisionTree(leftData);
-  const right = buildDecisionTree(rightData);
+  const left = buildDecisionTree(leftData, parentId);
+  const right = buildDecisionTree(rightData, parentId);
 
   return {
-    type: "step",
-    symptom: bestSymptom!,
-    left,
-    right,
+    symptom: bestSymptom , id: id, parentId: parentId, type: "step", children: [left, right]
   };
 }
-
-
-function evaluateProbability(data: any[]): boolean {
-  return true }
-
-function mostProbable(data: any[]): string {
-  return "feature escolhida" } 
-
 
