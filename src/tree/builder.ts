@@ -118,6 +118,8 @@ function calculateInformationGain(data: LogicSentence[], feature: string): numbe
   // This depends on your specific use case and dataset structure
   // For simplicity, you can refer to standard algorithms for calculating information gain
   // such as ID3 or C4.5
+
+  // sigma log base n ( n numero de classes ) de p(n)
   return 0;
 }
 
@@ -134,7 +136,10 @@ export type TreeNode = {
   id: string;
   parentId: string;
   type: "step" | "leaf";
-  children?: TreeNode[]
+  children?: {  no: TreeNode
+                yes: TreeNode
+                dontknow: TreeNode}
+
 };
 
 
@@ -201,7 +206,7 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
   const right = buildDecisionTree(rightData, parentId);
 
   return {
-    symptom: bestSymptom , id: id, parentId: parentId, type: "step", children: [left, right]
+    symptom: bestSymptom , id: id, parentId: parentId, type: "step", children: {no: left, yes: right, dontknow: left  }
   };
 }
 
