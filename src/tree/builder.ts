@@ -1,3 +1,4 @@
+import { Weight } from "lucide-svelte";
 import type { Node } from "../store/graph";
 
 const nodesMock: Node[] = [
@@ -111,24 +112,49 @@ export function treeBuilder(currentInfo: any): Node[] {
   return nodesMock;
 }
 
-function calculateInformationGain(data: LogicSentence[], feature: string): number {
-  // Implement your information gain calculation logic here
-  // You'll need to calculate entropy before and after the split
-  // Return the information gain value
-  // This depends on your specific use case and dataset structure
-  // For simplicity, you can refer to standard algorithms for calculating information gain
-  // such as ID3 or C4.5
-
-  // sigma log base n ( n numero de classes ) de p(n)
-  return 0;
-}
 
 function evaluateProbability(data: LogicSentence[]): boolean {
   return true }
-
+    
 function mostProbable(data: LogicSentence[]): string {
   return "feature escolhida" } 
 
+function calculateEntropy(leftData: LogicSentence[], rightData: LogicSentence[]): number {
+  let sets  : LogicSentence[][] = [];
+  sets.push(leftData, rightData);
+  let set1 = sets[1]
+
+  let totalLength = 0;
+
+  // Iterate over the array of arrays and add the length of each sub-array
+  for (const set of sets) {
+    totalLength += set.length;
+}
+
+let totalEntropy = 0;
+for (const set of sets) {
+  let weight = set.length/totalLength;
+  const setInstances = set.length;
+
+    // Count the number of instances for each class
+    const classCounts: { [key: string]: number } = set.reduce((counts, obj) => {
+      const classValue = obj.consequence.label as string; // Type assertion
+      counts[classValue] = (counts[classValue] || 0) + 1;
+      return counts;
+    }, {}as { [key: string]: number });
+
+    const entropy = Object.values(classCounts).reduce((result, count) => {
+      const probability = count / setInstances;
+      return result - probability * Math.log2(probability);
+    }, 0);
+
+    // Calculate the weighted entropy and accumulate the result
+    totalEntropy += (setInstances / totalLength) * entropy;
+
+  }
+  return totalEntropy;
+}
+  
 
 
 export type TreeNode = {
@@ -179,14 +205,22 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
       uniqueParametersSet.add(parameter);
     })});
 
-
+  const entropyBefore = calculateEntropy(data, [])
   // Iterate through each feature
+  //informationGain = entropyBefore - entropyAfter
   for (const symptom in uniqueParametersSet) {
-      const gain = calculateInformationGain(data, symptom);
-
+     // Split the data based on the best feature 
+      const tryLeftData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && !parameter.value ) 
+                                  || !item.parameters.some( parameter => parameter.label == bestSymptom));
+      const tryRightData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && parameter.value ) 
+                                  || !item.parameters.some( parameter => parameter.label == bestSymptom));
+      let entropyAfter = calculateEntropy(tryLeftData, tryRightData);
+      let gain = entropyBefore - entropyAfter
       if (gain > bestGain) {
         bestGain = gain;
         bestSymptom = symptom;
+        let leftData = tryLeftData;
+        let rightData = tryRightData;
       }
   }
 
@@ -194,12 +228,6 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
   if (bestGain === 0) {
     return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
-
-  // Split the data based on the best feature 
-  const leftData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && !parameter.value ) 
-                                || !item.parameters.some( parameter => parameter.label == bestSymptom));
-  const rightData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && parameter.value ) 
-                                || !item.parameters.some( parameter => parameter.label == bestSymptom));
 
   // Recursively build the left and right subtrees
   const left = buildDecisionTree(leftData, parentId);
