@@ -25,7 +25,8 @@
   {/if}
   
   {#if (shownView === "akinator")}
-  <section class="wrapper">
+  <section >
+    <Akinator/>
     <button class="back-button" on:click={() => shownView = "menu"}>
       <ArrowLeft size={24} />
     </button>
@@ -33,16 +34,16 @@
   {/if}
   
 {#if (shownView === "viewTree")}
-<main class="wrapper">
+<main >
   <TreeView bind:selectedNodeId bind:shownView />
-  <button class="back-button" on:click={() => shownView = "akinator"}>
+  <button class="back-button" on:click={() => shownView = "menu"}>
     <ArrowLeft size={24} />
   </button>
 </main>
 {/if}
 
 {#if (shownView === "editingNode")}
-<section class="wrapper">
+<section >
   <EditingNode nodeId={selectedNodeId} />
   <button class="back-button" on:click={() => shownView = "viewTree"}>
     <ArrowLeft size={24} />
