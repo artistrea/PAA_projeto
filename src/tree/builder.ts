@@ -113,11 +113,16 @@ export function treeBuilder(currentInfo: any): Node[] {
 }
 
 
-function evaluateProbability(data: LogicSentence[]): boolean {
-  return true }
-    
 function mostProbable(data: LogicSentence[]): string {
-  return "feature escolhida" } 
+  if (data.length === 0) {
+    return ""; // Return null for an empty array
+  }
+
+  // Sort the logic sentences in descending order based on probability
+  const sortedSentences = [...data].sort((a, b) => b.probability - a.probability);
+
+  // The sentence with the highest probability is now at the beginning of the sorted array
+  return sortedSentences[0].consequence.label; } 
 
 function calculateEntropy(leftData: LogicSentence[], rightData: LogicSentence[]): number {
   let sets  : LogicSentence[][] = [];
@@ -186,15 +191,12 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
   const uniqueClasses = Array.from(new Set(data.map((item) => item.consequence.label)));
   if (uniqueClasses.length === 1) {
     return {symptom: uniqueClasses[0] , id: id, parentId: parentId, type: "leaf" };
-  }else if (evaluateProbability(data)){ 
-    return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
-  
 
   // Find the best split based on information gain
   let bestGain = -1;
   let bestSymptom : string = ""
-
+  let bestEntropyAfter = -1;
 
   //Get list of features -- Decidir se isso vem antes ou eh feito para cada construcao 
   
@@ -218,6 +220,7 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
       let gain = entropyBefore - entropyAfter
       if (gain > bestGain) {
         bestGain = gain;
+        bestEntropyAfter = entropyAfter
         bestSymptom = symptom;
         let leftData = tryLeftData;
         let rightData = tryRightData;
@@ -227,7 +230,10 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
   // Base case: If no split improves information gain, create a leaf node
   if (bestGain === 0) {
     return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
+  } else if (bestEntropyAfter/entropyBefore == 1 ){ // decidir esse numero
+      return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
+  
 
   // Recursively build the left and right subtrees
   const left = buildDecisionTree(leftData, parentId);
