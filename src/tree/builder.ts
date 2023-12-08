@@ -185,14 +185,13 @@ type LogicSentence = {
   probability: number;
 };
 
-function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
+export function buildDecisionTree(data: LogicSentence[], parentId: string, dk: boolean, seenSymptoms: string[]): TreeNode {
   // Base case: If all instances have the same class, create a leaf node
   const id = Date.now().toString()
   const uniqueClasses = Array.from(new Set(data.map((item) => item.consequence.label)));
   if (uniqueClasses.length === 1) {
     return {symptom: uniqueClasses[0] , id: id, parentId: parentId, type: "leaf" };
   }
-
   // Find the best split based on information gain
   let bestGain = -1;
   let bestSymptom : string = ""
@@ -208,27 +207,31 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
     })});
 
   const entropyBefore = calculateEntropy(data, [])
+  let leftData : LogicSentence[] = [];
+  let rightData: LogicSentence[] = [];
   // Iterate through each feature
   //informationGain = entropyBefore - entropyAfter
   for (const symptom in uniqueParametersSet) {
-     // Split the data based on the best feature 
-      const tryLeftData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && !parameter.value ) 
-                                  || !item.parameters.some( parameter => parameter.label == bestSymptom));
-      const tryRightData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && parameter.value ) 
-                                  || !item.parameters.some( parameter => parameter.label == bestSymptom));
-      let entropyAfter = calculateEntropy(tryLeftData, tryRightData);
-      let gain = entropyBefore - entropyAfter
-      if (gain > bestGain) {
-        bestGain = gain;
-        bestEntropyAfter = entropyAfter
-        bestSymptom = symptom;
-        let leftData = tryLeftData;
-        let rightData = tryRightData;
-      }
+    //check if symptom has already been answered
+    if (!seenSymptoms.includes(symptom)){
+      // Split the data based on the best feature 
+        const tryLeftData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && !parameter.value ) 
+                                    || !item.parameters.some( parameter => parameter.label == bestSymptom));
+        const tryRightData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && parameter.value ) 
+                                    || !item.parameters.some( parameter => parameter.label == bestSymptom));
+        let entropyAfter = calculateEntropy(tryLeftData, tryRightData);
+        let gain = entropyBefore - entropyAfter
+        if (gain > bestGain) {
+          bestGain = gain;
+          bestEntropyAfter = entropyAfter
+          bestSymptom = symptom; // checar esse tipo
+          leftData = tryLeftData;
+          rightData = tryRightData;
+        }
+   }
   }
-
-  // Base case: If no split improves information gain, create a leaf node
-  if (bestGain === 0) {
+  // Base case: If no split improves information gain or if all symptoms were seen, create a leaf node
+  if (bestGain === 0 || bestGain < 0) {
     return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   } else if (bestEntropyAfter/entropyBefore == 1 ){ // decidir esse numero
       return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
@@ -236,11 +239,11 @@ function buildDecisionTree(data: LogicSentence[], parentId: string): TreeNode {
   
 
   // Recursively build the left and right subtrees
-  const left = buildDecisionTree(leftData, parentId);
-  const right = buildDecisionTree(rightData, parentId);
-
+  const left = buildDecisionTree(leftData, parentId, false, seenSymptoms);
+  const right = buildDecisionTree(rightData, parentId, false, seenSymptoms);
+  const dontknow = buildDecisionTree(rightData, parentId, true, [...seenSymptoms, bestSymptom]);
   return {
-    symptom: bestSymptom , id: id, parentId: parentId, type: "step", children: {no: left, yes: right, dontknow: left  }
+    symptom: bestSymptom , id: id, parentId: parentId, type: "step", children: {no: left, yes: right, dontknow: dontknow  }
   };
 }
 
