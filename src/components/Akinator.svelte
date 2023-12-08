@@ -1,10 +1,11 @@
 <script lang="ts">
   import { FastForward } from "lucide-svelte";
+  import QuestionCard from "./QuestionCard.svelte";
 
   let shownView:  "inicio" | "perguntas" | "pensando" | "resposta" = "inicio";
 
   let cont= 1
-</script> 
+</script>
 
 <main class="menu">
   <section class="card">
@@ -17,10 +18,11 @@
       </button>
     {/if}
     {#if (shownView === "perguntas")}
-      <h1 class="h1"> Pergunta nº {cont}</h1>
+      <!-- <h1 class="h1"> Pergunta nº {cont}</h1>
       <button class="button" on:click={() => cont+=1}>
         Próxima pergunta <FastForward/>
-      </button>
+      </button> -->
+      <QuestionCard />
     {/if}
   </section>
 </main>
