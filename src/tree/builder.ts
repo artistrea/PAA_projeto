@@ -231,7 +231,7 @@ export function buildDecisionTree(data: LogicSentence[], parentId: string, dk: b
    }
   }
   // Base case: If no split improves information gain or if all symptoms were seen, create a leaf node
-  if (bestGain === 0 || bestGain < 0) {
+  if (bestGain <= 0 ) {
     return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   } else if (bestEntropyAfter/entropyBefore == 1 ){ // decidir esse numero
       return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
