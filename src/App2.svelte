@@ -115,6 +115,9 @@
       box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25),
       inset 0px -2px 3px rgba(0, 0, 0, 0.25);
       cursor: pointer;
+      line-height: 1.5; 
+      display: flex; 
+      align-items: center;
     }
   
     .open-button2 {
@@ -129,5 +132,8 @@
       box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25),
       inset 0px -2px 3px rgba(0, 0, 0, 0.25);
       cursor: pointer;
+      line-height: 1.5; 
+      display: flex; 
+      align-items: center;
     }
   </style>

@@ -103,17 +103,21 @@
         padding: 1rem;
     }
     .button {
-      padding: 1rem;
-      font-size: 1.3rem;
-      border: none;
-      border-radius: 1rem;
-      background-color: rgb(0,200,100);
-      color: white;
-      z-index: 999;
-      transform-origin: center;
-      box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25),
-      inset 0px -2px 3px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
+        padding: 1rem 2rem;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 1rem;
+        background-color: rgb(0,200,100);
+        color: white;
+        z-index: 999;
+        transform-origin: center;
+        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25),
+        inset 0px -2px 3px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        line-height: 2rem; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
     }
     .input {
         border-radius: 25px;
