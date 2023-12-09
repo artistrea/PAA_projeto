@@ -239,9 +239,9 @@ export function buildDecisionTree(data: LogicSentence[], parentId: string, dk: b
   
 
   // Recursively build the left and right subtrees
-  const left = buildDecisionTree(leftData, parentId, false, seenSymptoms);
-  const right = buildDecisionTree(rightData, parentId, false, seenSymptoms);
-  const dontknow = buildDecisionTree(rightData, parentId, true, [...seenSymptoms, bestSymptom]);
+  const left = buildDecisionTree(leftData, id, false, seenSymptoms);
+  const right = buildDecisionTree(rightData, id, false, seenSymptoms);
+  const dontknow = buildDecisionTree(rightData, id, true, [...seenSymptoms, bestSymptom]);
   return {
     symptom: bestSymptom , id: id, parentId: parentId, type: "step", children: {no: left, yes: right, dontknow: dontknow  }
   };
