@@ -3,7 +3,7 @@ import type { Node } from "@xyflow/svelte";
 export type { OurNode as Node };
 
 import { writable } from "svelte/store";
-import { initialTreeData } from "../tree";
+import { buildTreeFromText, initialTreeData } from "../tree";
 
 type OurNode = Omit<Node, "position"> & {
   data: {
@@ -15,6 +15,7 @@ type OurNode = Omit<Node, "position"> & {
 };
 
 export const nodes = writable<OurNode[]>(initialTreeData);
+export const CSVText = writable<string>("");
 
 export type TreeNode = {
   id: string;
@@ -44,4 +45,8 @@ export const treeStructure = writable<TreeNode>();
 
 nodes.subscribe((n) => {
   treeStructure.set(createTreeStructure(n));
+});
+
+CSVText.subscribe((txt) => {
+  nodes.set(buildTreeFromText(txt));
 });

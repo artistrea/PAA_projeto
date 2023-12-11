@@ -1,14 +1,22 @@
 <script lang="ts">
     import Akinator from './components/Akinator.svelte';
+    import EditCsv from './components/EditCSV.svelte';
     import EditingNode from './components/EditingNode.svelte';
     import TreeView from './components/TreeView.svelte';
-    import { ArrowLeft, Edit, HelpCircle } from 'lucide-svelte';
+    import { ArrowLeft, Edit, HelpCircle, Settings } from 'lucide-svelte';
     
-    let shownView:  "menu" | "viewTree" | "akinator" | "editingNode" = "menu";
+    let shownView:  "menu" | "viewTree" | "akinator" | "editingNode" | "editingCSV" = "menu";
   
     let selectedNodeId: string | undefined = '1';
   </script>
   
+  {#if (shownView === "editingCSV")}
+    <EditCsv />
+    <button class="back-button" on:click={() => shownView = "menu"}>
+      <ArrowLeft size={24} />
+    </button>
+  {/if}
+
   {#if (shownView === "menu")}
   <section class="menu">
     <h1 class="h1"> Boas-vindas </h1>
@@ -21,6 +29,9 @@
         <Edit /> Editar árvore
       </button>
     </div>
+    <button class="open-button3" on:click={() => shownView = "editingCSV"}>
+      <Settings /> Configurar regras da árvore
+    </button>
   </section>
   {/if}
   
@@ -134,6 +145,18 @@
       cursor: pointer;
       line-height: 1.5; 
       display: flex; 
+      align-items: center;
+    }
+
+    .open-button3 {
+      box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25),
+      inset 0px -2px 3px rgba(0, 0, 0, 0.25);
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      cursor: pointer;
+      transform: translateX(-50%);
+      display: flex;
       align-items: center;
     }
   </style>
