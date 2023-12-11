@@ -82,7 +82,7 @@
 {/if}
 
 {#if (!End)}
-    <h1 class="h1"> Pergunta nº {cont}, {End}</h1>
+    <h1 class="h1"> Pergunta nº {cont}</h1>
     <h3 class="question">{question}</h3>
     <!-- <button class="button" on:click={() => cont+=1}>
     Próxima pergunta <FastForward/>
@@ -114,10 +114,10 @@
         box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25),
         inset 0px -2px 3px rgba(0, 0, 0, 0.25);
         cursor: pointer;
-        line-height: 2rem; 
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
+        line-height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     .input {
         border-radius: 25px;
