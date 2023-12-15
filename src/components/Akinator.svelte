@@ -1,10 +1,17 @@
 <script lang="ts">
   import { FastForward } from "lucide-svelte";
   import QuestionCard from "./QuestionCard.svelte";
+  import { textToInfoParser } from "../tree/parser";
+  import { buildDecisionTree } from "../tree/builder";
 
   let shownView:  "inicio" | "perguntas" | "pensando" | "resposta" = "inicio";
 
   let cont= 1
+
+  let rules = textToInfoParser("");
+  // console.log(rules);
+  let tree = buildDecisionTree(rules);
+  console.log(tree);
 </script>
 
 <main class="menu">

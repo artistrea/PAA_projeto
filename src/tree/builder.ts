@@ -1,5 +1,5 @@
 import { Weight } from "lucide-svelte";
-import type { Node } from "../store/graph";
+import type { Atom, LogicSentence, Node, TreeNode } from "../store/graph";
 
 const nodesMock: Node[] = [
   {
@@ -122,7 +122,7 @@ function mostProbable(data: LogicSentence[]): string {
   const sortedSentences = [...data].sort((a, b) => b.probability - a.probability);
 
   // The sentence with the highest probability is now at the beginning of the sorted array
-  return sortedSentences[0].consequence.label; } 
+  return sortedSentences[0].consequence.label; }
 
 function calculateEntropy(leftData: LogicSentence[], rightData: LogicSentence[]): number {
   let sets  : LogicSentence[][] = [];
@@ -159,36 +159,14 @@ for (const set of sets) {
   }
   return totalEntropy;
 }
-  
 
 
-export type TreeNode = {
-  symptom: string;
-  id: string;
-  parentId: string;
-  type: "step" | "leaf";
-  children?: {  no: TreeNode
-                yes: TreeNode
-                dontknow: TreeNode}
-
-};
-
-
-type Atom = {
-  type: "cause" | "symptom";
-  label: string;
-};
-
-type LogicSentence = {
-  consequence: Atom;
-  parameters: (Atom & { value: boolean })[]; // ignore cause
-  probability: number;
-};
-
-export function buildDecisionTree(data: LogicSentence[], parentId: string, dk: boolean, seenSymptoms: string[]): TreeNode {
+export function buildDecisionTree(data: LogicSentence[], parentId: string='0', dk: boolean=false, seenSymptoms: string[]=[]): TreeNode {
+  // console.log(data);
   // Base case: If all instances have the same class, create a leaf node
   const id = Date.now().toString()
   const uniqueClasses = Array.from(new Set(data.map((item) => item.consequence.label)));
+  // console.log(uniqueClasses);
   if (uniqueClasses.length === 1) {
     return {symptom: uniqueClasses[0] , id: id, parentId: parentId, type: "leaf" };
   }
@@ -197,46 +175,62 @@ export function buildDecisionTree(data: LogicSentence[], parentId: string, dk: b
   let bestSymptom : string = ""
   let bestEntropyAfter = -1;
 
-  //Get list of features -- Decidir se isso vem antes ou eh feito para cada construcao 
-  
+  //Get list of features -- Decidir se isso vem antes ou eh feito para cada construcao
+
   const uniqueParametersSet = new Set<Atom>();
+  const uniqueParametersSetString = new Set<string>();
+
 
   data.forEach((sentence) => {
     sentence.parameters.forEach((parameter) => {
-      uniqueParametersSet.add(parameter);
-    })});
+      const stringRepresentation = JSON.stringify(parameter);
+      uniqueParametersSetString.add(stringRepresentation);
+    });
+  });
+  uniqueParametersSetString.forEach((stringRepresentation) => {
+    uniqueParametersSet.add(JSON.parse(stringRepresentation));
+  });
+  // console.log(uniqueParametersSet);
 
-  const entropyBefore = calculateEntropy(data, [])
+  const entropyBefore = calculateEntropy(data, []);
   let leftData : LogicSentence[] = [];
   let rightData: LogicSentence[] = [];
   // Iterate through each feature
   //informationGain = entropyBefore - entropyAfter
-  for (const symptom in uniqueParametersSet) {
+  for (const symptom of uniqueParametersSet) {
     //check if symptom has already been answered
-    if (!seenSymptoms.includes(symptom)){
-      // Split the data based on the best feature 
-        const tryLeftData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && !parameter.value ) 
-                                    || !item.parameters.some( parameter => parameter.label == bestSymptom));
-        const tryRightData = data.filter((item) => item.parameters.some( parameter => parameter.label == bestSymptom && parameter.value ) 
-                                    || !item.parameters.some( parameter => parameter.label == bestSymptom));
+    if (!seenSymptoms.includes(symptom.label)){
+      // Split the data based on the best feature
+        const tryLeftData = data.filter((item) => item.parameters.some( parameter => parameter.label == symptom.label && !parameter.value )
+                                    || !item.parameters.some( parameter => parameter.label == symptom.label));
+        const tryRightData = data.filter((item) => item.parameters.some( parameter => parameter.label == symptom.label && parameter.value )
+                                    || !item.parameters.some( parameter => parameter.label == symptom.label));
+        console.log("AQUIIIIIIIIIIIIIIIIII");
+        // console.log(tryLeftData);
+        // console.log(tryRightData);
+
         let entropyAfter = calculateEntropy(tryLeftData, tryRightData);
         let gain = entropyBefore - entropyAfter
         if (gain > bestGain) {
           bestGain = gain;
           bestEntropyAfter = entropyAfter
-          bestSymptom = symptom; // checar esse tipo
+          bestSymptom = symptom.label; // checar esse tipo
           leftData = tryLeftData;
           rightData = tryRightData;
         }
    }
+  //  console.log(bestGain);
   }
+  console.log(leftData);
+  console.log(rightData);
+  seenSymptoms.push(bestSymptom);
   // Base case: If no split improves information gain or if all symptoms were seen, create a leaf node
   if (bestGain <= 0 ) {
     return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   } else if (bestEntropyAfter/entropyBefore == 1 ){ // decidir esse numero
       return { symptom: mostProbable(data) , id: id, parentId: parentId, type: "leaf" };
   }
-  
+
 
   // Recursively build the left and right subtrees
   const left = buildDecisionTree(leftData, id, false, seenSymptoms);
