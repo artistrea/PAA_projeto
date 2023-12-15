@@ -17,27 +17,32 @@
   function calcTreeHeightNMaxSons(tree: TreeNode): [number, number] {
     if (!tree.children) return [1, 0];
 
-    const [ch, cs] = tree.children.reduce((p, c) => {
+    const children : TreeNode[] = tree.children ? Object.keys(tree.children).map((k ) => tree.children![k as keyof typeof tree.children]) : []
+
+
+    const [ch, cs] = children.reduce((p, c) => {
       const [cch, ccs] = calcTreeHeightNMaxSons(c)
       return [Math.max(p[0], cch), Math.max(p[0], ccs)]
     }, [1, 0]);
 
     console.log("height", ch);
-    return [ch + 1, Math.max(cs, tree.children.length)];
+    return [ch + 1, Math.max(cs, children.length)];
   }
 
   function mapTree(tree: TreeNode, height: number, maxSons: number, acc: Node[] = [], x = 0, y = 0, offset = 0): [Edge[], Node[]] {
     const curNode = {...$nodes.find(n => n.id === tree.id)!, position: {x, y}};
 
-    if (!tree.children)
+    const children : TreeNode[] = tree.children ? Object.keys(tree.children).map((k ) => tree.children![k as keyof typeof tree.children]) : []
+
+    if (!children)
       return [[], [...acc, curNode]]
 
-    const rootEdges = tree.children.map(c => 
+    const rootEdges = children.map(c => 
         ({
           id: `${tree.id}-${c.id}`,
           source: tree.id,
           target: c.id,
-          label: c.route,
+          label: c.symptom,
           type: c.type
         })
       );
@@ -45,7 +50,7 @@
     // [TODO]: CONSERTAR SAPORRA AQUI PRA ALTURAS DIFERENTES:
     if (offset === 0) offset = Math.pow(maxSons-1, height)*6;
 
-    const [childrenEdges, childrenNodes] = tree.children.reduce((p, c, i) => {
+    const [childrenEdges, childrenNodes] = children.reduce((p, c, i) => {
       const [childEdges, childNodes] = mapTree(c, height-1, maxSons, acc, x + i * offset - offset, y+150, offset/(maxSons-1))
       return [[...p[0], ...childEdges], [...p[1], ...childNodes]] satisfies [Edge[], Node[]];
     }, [[], []] as [Edge[], Node[]])
@@ -57,7 +62,7 @@
   
   const internalEdges = writable<Edge[]>([]);
 
-  $: [$internalEdges, $internalNodes] = mapTree($treeStructure, ...calcTreeHeightNMaxSons($treeStructure))
+  $: [$internalEdges, $internalNodes] = $treeStructure ? mapTree($treeStructure, ...calcTreeHeightNMaxSons($treeStructure)) : [[], []]
 
   export let selectedNodeId: string | undefined;
 

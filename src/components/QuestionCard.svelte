@@ -1,97 +1,38 @@
 <script lang="ts">
     import { FastForward } from "lucide-svelte";
-    import { treeBuilder } from "../tree/builder";
-    import type { Node } from "@xyflow/svelte";
+    import { nodes, type GraphNode } from "../store/graph";
+  import { onMount } from "svelte";
 
-    type OurNode = Omit<Node, "position"> & {
-        data: {
-            label: string;
-            options: string[];
-            parentId?: string;
-            route?: string;
-        };
-    };
-
-    let nodes = treeBuilder("");
-    // Estrutura dos Nós:
-    // data: {
-    //     label: string;
-    //     options: string[];
-    //     parentId?: string;
-    //     route?: string;
-    // };
     let cont = 0;
-    let question = nodes[cont].data.label;
-    let answer = '';
+
+    let currentId = "0";
+    let currentNode: GraphNode | undefined;
+    $: currentNode = $nodes.find((n) => n.id === currentId);
     let End = false;
 
-    function isEnd(options: string[]) {
-        if (options.length === 0) {
-            End = true;
-        }
-    }
 
-    function traverseNodes(nodesMock: OurNode[], answer: string): string | null {
-        let count = 0;
-        let question = nodesMock[count];
-
-        while (question.data.options.length > 0) {
-            if (question.data.options.includes(answer)) {
-                const nextQuestion = nodesMock.find(node => node.data.route === answer);
-                if (nextQuestion) {
-                    question = nextQuestion;
-                    count = nodesMock.indexOf(nextQuestion);
-                }
-            }
-
-            isEnd(question.data.options); // Update End value
-            // if (question.data.options.length === 0) {
-            if (End) {
-                return question.data.label;
-            }
-
-            count++;
-            if (count >= nodesMock.length) {
-                return null; // return null if we've gone through all nodes without finding a match
-            }
-
-            question = nodesMock[count];
-        }
-
-        return null; // return null if we've gone through all nodes without finding a match
-    }
-
-    function submitAnswer() {
-        // isEnd(nodes[cont+1].data.options); // Muda o valor de End caso seja uma folha
-        let result = traverseNodes(nodes, answer);
-        if (End) {
-            // cont++;
-            // question = nodes[cont].data.label;
-            question = result;
-            return;
-        }
-        cont++;
-        question = nodes[cont].data.label;
-        answer = '';
-    }
+    onMount(() => {
+        currentId = $nodes.find((n) => n.data.parentId === "0")?.id || ""
+    })
 </script>
 
-{#if (End)}
+ {#if (End)}
     <h1 class="h1"> Aqui está a solução para seu problema:</h1>
-    <h3 class="question">{question}</h3>
+    <h3 class="question">{currentNode?.data.label}</h3>
 {/if}
 
-{#if (!End)}
+{#if (currentNode)}
     <h1 class="h1"> Pergunta nº {cont}</h1>
-    <h3 class="question">{question}</h3>
-    <!-- <button class="button" on:click={() => cont+=1}>
-    Próxima pergunta <FastForward/>
-    </button> -->
-    <form on:submit|preventDefault={submitAnswer}>
-        <input class="input" type="text" bind:value={answer} placeholder="Sua resposta:" />
-        <button class="button" type="submit">Próxima pergunta <FastForward/></button>
-    </form>
-{/if}
+    <h3 class="question">{currentNode.data.label}</h3>
+     {#each currentNode.data.options as option}
+        <button on:click={() => {currentId = option.nextId; cont++}}>
+            {option.label}
+        </button>
+    {/each}
+    <pre>
+        {JSON.stringify(currentNode, null, 2)}
+    </pre>
+{/if} 
 
 <style>
     .h1 {
@@ -102,7 +43,7 @@
     .question {
         padding: 1rem;
     }
-    .button {
+    button {
         padding: 1rem 2rem;
         font-size: 1.3rem;
         border: none;

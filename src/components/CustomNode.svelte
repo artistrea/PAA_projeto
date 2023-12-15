@@ -12,6 +12,7 @@
 />
 
 {data.label}
+epa
 
 <Handle
     type="source"
@@ -22,7 +23,9 @@
 <style>
     :global(.svelte-flow__node-selectorNode) {
         font-size: 12px;
-        background: #eee;
+        height: 10px;
+        width: 10px;
+        background: red;
         border: 1px solid #555;
         border-radius: 5px;
         text-align: center;

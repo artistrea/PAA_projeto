@@ -10,10 +10,7 @@ export type TreeNode = {
   id: string;
   parentId: string;
   type: "step" | "leaf";
-  children?: {  no: TreeNode
-                yes: TreeNode
-                dontknow: TreeNode}
-
+  children?: { no: TreeNode; yes: TreeNode; dontknow: TreeNode };
 };
 
 export type Atom = {
@@ -27,29 +24,42 @@ export type LogicSentence = {
   probability: number;
 };
 
-type GraphNode = Omit<Node, "position"> & {
+export type GraphNode = Omit<Node, "position" | "data"> & {
   data: {
     label: string;
-    options: string[];
+    options: { label: string; nextId: string }[];
     parentId?: string;
     route?: string;
-    children?: { no: string, yes: string, dontknow: string }
   };
 };
 
-export const nodes = writable<GraphNode[]>(initialTreeData);
+export const nodes = writable<GraphNode[]>();
 export const CSVText = writable<string>("");
-export const treeStructure = writable<TreeNode>();
+export const treeStructure = writable<TreeNode | undefined>(initialTreeData);
 
 function createNodeStructure(ns: TreeNode): GraphNode[] {
   const newNode: GraphNode = {
     id: ns.id,
     data: {
       label: ns.symptom,
-      options: ["Sim", "Não", "Não sei"],
+      options: ns.children
+        ? [
+            {
+              label: "Sim",
+              nextId: ns.children.yes.id,
+            },
+            {
+              label: "Não",
+              nextId: ns.children.no.id,
+            },
+            {
+              label: "Não sei",
+              nextId: ns.children.dontknow.id,
+            },
+          ]
+        : [],
       parentId: ns.parentId,
       route: ns.symptom,
-      children: ns.children ? { no: ns.children.no.id, yes: ns.children.yes.id, dontknow: ns.children.dontknow.id } : undefined
     },
   };
 
@@ -59,12 +69,23 @@ function createNodeStructure(ns: TreeNode): GraphNode[] {
     nodes = nodes.concat(createNodeStructure(ns.children.yes));
     nodes = nodes.concat(createNodeStructure(ns.children.dontknow));
   }
+  console.log("nodes", nodes);
+  return nodes;
 }
 
 treeStructure.subscribe((n) => {
-  nodes.set(createNodeStructure(n));
+  if (n) nodes.set(createNodeStructure(n));
 });
 
 CSVText.subscribe((txt) => {
-  nodes.set(buildTreeFromText(txt));
+  treeStructure.set(buildTreeFromText(txt));
 });
+
+// curId = "0"
+// curNode = nodes[curId]
+
+// Sua cor é azul?
+
+// Sim
+// Não
+// Não sei

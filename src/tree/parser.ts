@@ -47,8 +47,8 @@ export function textToInfoParser(text: string) {
     rules.push(rule)
 
   }
-  console.log(rules)
-  console.log(allSymptoms)
+  // console.log(rules)
+  // console.log(allSymptoms)
   return rules
 }
 
