@@ -8,15 +8,16 @@
     let currentId = "0";
     let currentNode: GraphNode | undefined;
     $: currentNode = $nodes.find((n) => n.id === currentId);
-    let End = false;
+    let hasTheGameEnded = false;
 
+    $: hasTheGameEnded = currentNode?.data.isLeaf ?? false
 
     onMount(() => {
         currentId = $nodes.find((n) => n.data.parentId === "0")?.id || ""
     })
 </script>
 
- {#if (End)}
+ {#if (hasTheGameEnded)}
     <h1 class="h1"> Aqui está a solução para seu problema:</h1>
     <h3 class="question">{currentNode?.data.label}</h3>
 {/if}

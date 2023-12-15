@@ -30,6 +30,7 @@ export type GraphNode = Omit<Node, "position" | "data"> & {
     options: { label: string; nextId: string }[];
     parentId?: string;
     route?: string;
+    isLeaf: boolean;
   };
 };
 
@@ -64,6 +65,7 @@ function createNodeStructure(ns: TreeNode): GraphNode[] {
         : [],
       parentId: ns.parentId,
       route: ns.symptom,
+      isLeaf: ns.type === "leaf",
     },
   };
 
