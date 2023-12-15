@@ -34,7 +34,11 @@ export type GraphNode = Omit<Node, "position" | "data"> & {
 };
 
 export const nodes = writable<GraphNode[]>();
-export const CSVText = writable<string>("");
+
+const data =
+  "“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3 \n“C causa 1”, (“S sintoma 1”, “S sintoma 2”), 0.5 \n“S sintoma 2”, NOT (“S sintoma 4”, NOT “S sintoma 3”), 0.3";
+
+export const CSVText = writable<string>(data);
 export const treeStructure = writable<TreeNode | undefined>(initialTreeData);
 
 function createNodeStructure(ns: TreeNode): GraphNode[] {
