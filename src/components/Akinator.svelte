@@ -18,10 +18,9 @@
   <section class="card">
     {#if (shownView === "inicio")}
       <h1 class="h1"> Como funciona ?</h1>
-      <p class="p"> Pense em um algoritmo de ordenação (exemplo: Mergesort, Quicksort, etc). Em seguida, faremos perguntas sobre
-        o algoritmo em questão e, ao final, advinharei qual que você está pensando!</p>
+      <p class="p">Aqui te ajudaremos a escolher um algoritmo para o seu problema. Vá respondendo conforme o que deseja que seu algoritmo tenha, e te diremos qual algoritmo usar!</p>
       <button class="button" on:click={() => shownView = "perguntas"}>
-        Aceito o desafio!
+        Escolha o algoritmo
       </button>
     {/if}
     {#if (shownView === "perguntas")}
