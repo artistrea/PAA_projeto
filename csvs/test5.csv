@@ -1,0 +1,22 @@
+“C Insertion Sort”, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Estável”, “S Eficiente para dados pequenos”), 0.33
+“C Insertion Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Estável“, “S Complexidade temporal linear”), 0.6
+“C Insertion Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Complexidade espacial constante“, “S Complexidade temporal quadratica”), 0.2
+“C Selection Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Ordenação simples“, NOT “S Estável”), 0.9
+“C Selection Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Ordenação simples“, “S Eficiente para dados pequenos”), 0.5
+“C Selection Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Complexidade espacial constante“, “S Complexidade temporal quadratica”), 0.4
+“C Quick Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Divisão e conquista“, NOT “S Eficiente para dados pequenos”), 0.5
+“C Quick Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, NOT “S Estável“,”S Complexidade temporal quadratica”), 0.3
+“C Quick Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Complexidade espacial linear”, “S Complexidade temporal igual a N LOGN”), 0.2
+“C Merge Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Complexidade espacial linear”, “S Complexidade temporal igual a N LOGN”), 0.4
+“C Merge Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Divisão e conquista”, NOT “S Eficiente para dados pequenos”), 0.8
+“C Merge Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Estável”, “S Complexidade temporal igual a N LOGN”), 0.4
+“C Counting Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Estável”, “S Eficiente para dados pequenos”), 0.33
+“C Counting Sort“, (“S Usa Vetor“, “S Problema de Ordenacao“, “S Estável”, “S Complexidade temporal igual a N + M”), 0.3
+”C Busca Binária”, (”S Usa Arvore”, ”S Requer lista ordenada”, ”S Complexidade temporal logarítmica”), 0.8
+”C Busca Binária”, (”S Usa Vetor”, ”S Requer lista ordenada”, ”S Complexidade temporal logarítmica”), 0.8
+”C Árvore de Decisão”, (”S Usa Grafos”, ”S Classificação supervisionada”, ”S Robusto a outliers”, ”S Não lida com dados categóricos”), 0.2
+”C Árvore de Decisão”, (”S Usa Arvore”, ”S Classificação supervisionada”, ”S Robusto a outliers”, ”S Não lida com dados categóricos”), 0.7
+”C Algoritmo de Dijkstra”, (”S Usa Grafos”, ”S Menor caminho em grafos ponderados”, ”S Não lida com arestas negativas”), 0.4
+”C Algoritmo de Floyd-Warshall”, (”S Usa Grafos”, ”S Todos os pares de menor caminho”, ”S Lida com arestas negativas”), 0.1
+”C Algoritmo de Kruskal”, (”S Usa Grafos”, ”S Árvore geradora mínima”, ”S Lida com grafos não conectados”), 0.2
+”C Algoritmo de Prim”, (”S Usa Grafos”, ”S Árvore geradora mínima”, ”S Mais eficiente em grafos densos”,  ”NOT S Lida com grafos não conectados”), 0.3

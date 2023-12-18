@@ -161,6 +161,7 @@ function calculateEntropy(
     // Calculate the weighted entropy and accumulate the result
     totalEntropy += (setInstances / totalLength) * entropy;
   }
+
   return totalEntropy;
 }
 let universalId = 0;
@@ -217,20 +218,17 @@ export function buildDecisionTree(
       const tryLeftData = data.filter(
         (item) =>
           item.parameters.some(
-            (parameter) => parameter.label == symptom.label && !parameter.value
+            (parameter) => parameter.label == symptom.label && !parameter.value // value == false
           ) ||
-          !item.parameters.some((parameter) => parameter.label == symptom.label)
+          !item.parameters.some((parameter) => parameter.label == symptom.label) // not included
       );
       const tryRightData = data.filter(
         (item) =>
           item.parameters.some(
-            (parameter) => parameter.label == symptom.label && parameter.value
-          ) ||
-          !item.parameters.some((parameter) => parameter.label == symptom.label)
+            (parameter) => parameter.label == symptom.label && parameter.value // value == true
+          )
+        // || !item.parameters.some((parameter) => parameter.label == symptom.label) // not included
       );
-      // console.log("AQUIIIIIIIIIIIIIIIIII");
-      // console.log(tryLeftData);
-      // console.log(tryRightData);
 
       let entropyAfter = calculateEntropy(tryLeftData, tryRightData);
       let gain = entropyBefore - entropyAfter;
@@ -245,7 +243,7 @@ export function buildDecisionTree(
     //  console.log(bestGain);
   }
   // console.log(leftData);
-  // console.log(rightData);
+  console.log("AAA", rightData);
   seenSymptoms.push(bestSymptom);
   // Base case: If no split improves information gain or if all symptoms were seen, create a leaf node
   if (bestGain <= 0) {
@@ -268,10 +266,7 @@ export function buildDecisionTree(
   // Recursively build the left and right subtrees
   const left = buildDecisionTree(leftData, id, seenSymptoms);
   const right = buildDecisionTree(rightData, id, seenSymptoms);
-  const dontknow = buildDecisionTree(rightData, id, [
-    ...seenSymptoms,
-    bestSymptom,
-  ]);
+  const dontknow = buildDecisionTree(data, id, seenSymptoms);
   return {
     symptom: bestSymptom,
     id: id,
