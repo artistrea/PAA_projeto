@@ -17,37 +17,56 @@
     })
 </script>
 
- {#if (hasTheGameEnded)}
-    <h1 class="h1"> Aqui está a solução para seu problema:</h1>
+{#if (hasTheGameEnded)}
+    <h1 class="h1">Então considere como solução:</h1>
     <h3 class="question">{currentNode?.data.label}</h3>
 {/if}
 
-{#if (currentNode)}
+{#if (currentNode && !hasTheGameEnded)}
     <h1 class="h1"> Pergunta nº {cont}</h1>
-    <h3 class="question">{currentNode.data.label}</h3>
+    <p class="question">
+        <span class="small">
+
+            Você quer que o algoritmo tenha esta propriedade:
+        </span>
+        <br>
+        <strong>    
+            {currentNode.data.label}
+        </strong>
+        ?
+    </p>
      {#each currentNode.data.options as option}
+        <!-- {#if (option.label !== "Não sei")} -->
+        <!-- não sei tá implementado errado -->
         <button on:click={() => {currentId = option.nextId; cont++}}>
             {option.label}
         </button>
+        <!-- {/if} -->
     {/each}
-    <pre>
+    <!-- <pre>
         {JSON.stringify(currentNode, null, 2)}
-    </pre>
-{/if} 
+    </pre> -->
+{/if}
 
 <style>
+    .small {
+        font-size: 0.9rem;
+    }
+
     .h1 {
         color: black;
-        font-size: clamp(2.5rem,4vw,4rem);
+        font-size: 3rem;
         font-weight: 100;
     }
     .question {
         padding: 1rem;
+        margin-bottom: auto;
     }
     button {
         padding: 1rem 2rem;
         font-size: 1.3rem;
         border: none;
+        margin-block: 1rem;
         border-radius: 1rem;
         background-color: rgb(0,200,100);
         color: white;
@@ -60,12 +79,5 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-    .input {
-        border-radius: 25px;
-        border: 2px solid rgb(0,200,100);
-        padding: 20px;
-        width: 200px;
-        height: 150px;
     }
 </style>

@@ -54,9 +54,8 @@
     position: relative;
     display: flex;
     border-radius: 1rem;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    padding: 4rem;
   }
 
   .h1 {
