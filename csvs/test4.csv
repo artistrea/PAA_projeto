@@ -1,0 +1,14 @@
+“C Insertion Sort”, (“S Estável”, “S Eficiente para dados pequenos”), 0.33
+“C Insertion Sort“, (“S Estável“, “S Complexidade temporal linear”), 0.6
+“C Insertion Sort“, (“S Complexidade espacial constante“, “S Complexidade temporal quadratica”), 0.7
+“C Selection Sort“, (“S Ordenação simples“, NOT “S Estável”), 0.9
+“C Selection Sort“, (“S Ordenação simples“, “S Eficiente para dados pequenos”), 0.5
+“C Selection Sort“, (“S Complexidade espacial constante“, “S Complexidade temporal quadratica”), 0.9
+“C Quick Sort“, (“S Divisão e conquista“, NOT “S Eficiente para dados pequenos”), 0.5
+“C Quick Sort“, (NOT “S Estável“,”S Complexidade temporal quadratica”), 0.3
+“C Quick Sort“, (“S Complexidade espacial linear”, “S Complexidade temporal igual a N LOGN”), 0.7
+“C Merge Sort“, (“S Complexidade espacial linear”, “S Complexidade temporal igual a N LOGN”), 0.9
+“C Merge Sort“, (“S Divisão e conquista”, NOT “S Eficiente para dados pequenos”), 0.8
+“C Merge Sort“, (“S Estável”, “S Complexidade temporal igual a N LOGN”), 0.9
+“C Counting Sort“, (“S Estável”, “S Eficiente para dados pequenos”), 0.33
+“C Counting Sort“, (“S Estável”, “S Complexidade temporal igual a N + M”), 1

@@ -1,0 +1,18 @@
+”C Insertion Sort”, (”S Estável”, ”S Eficiente para dados pequenos”, ”S Ordenação”), 0.33
+”C Insertion Sort”, (”S Estável”, ”S Complexidade temporal linear”, ”S Ordenação”), 0.6
+”C Insertion Sort”, (”S Complexidade espacial constante”, ”S Complexidade temporal quadratica”, ”S Ordenação”), 0.7
+”C Selection Sort”, (”S Ordenação simples”, ”NOT S Estável”, ”S Ordenação”), 0.9
+”C Selection Sort”, (”S Ordenação simples”, ”S Eficiente para dados pequenos”, ”S Ordenação”), 0.5
+”C Selection Sort”, (”S Complexidade espacial constante”, ”S Complexidade temporal quadratica”, ”S Ordenação”), 0.9
+”C Quick Sort”, (”S Divisão e conquista”, ”NOT S Eficiente para dados pequenos”, ”S Ordenação”), 0.5
+”C Quick Sort”, (”NOT S Estável”, ”S Complexidade temporal quadratica”, ”S Ordenação”), 0.3
+”C Quick Sort”, (”S Complexidade espacial linear”, ”S Complexidade temporal igual a N LOGN”, ”S Ordenação”), 0.7
+”C Merge Sort”, (”S Complexidade espacial linear”, ”S Complexidade temporal igual a N LOGN”, ”S Ordenação”), 0.9
+”C Merge Sort”, (”S Divisão e conquista”, ”NOT S Eficiente para dados pequenos”, ”S Ordenação”), 0.8
+”C Merge Sort”, (”S Estável”, ”S Complexidade temporal igual a N LOGN”, ”S Ordenação”), 0.9
+”C Busca Binária”, (”S Eficiente”, ”S Requer lista ordenada”, ”S Complexidade temporal logarítmica”, ”S Árvore”), 0.8
+”C Árvore de Decisão”, (”S Classificação supervisionada”, ”S Robusto a outliers”, ”S Não lida com dados categóricos”, ”S Árvore”), 0.7
+”C Algoritmo de Dijkstra”, (”S Menor caminho em grafos ponderados”, ”S Não lida com arestas negativas”, ”S Grafo”), 0.9
+”C Algoritmo de Floyd-Warshall”, (”S Todos os pares de menor caminho”, ”S Lida com arestas negativas”, ”S Grafo”), 0.85
+”C Algoritmo de Kruskal”, (”S Árvore geradora mínima”, ”S Lida com grafos não conectados”, ”S Grafo”), 0.75
+”C Algoritmo de Prim”, (”S Árvore geradora mínima”, ”S Mais eficiente em grafos densos”,  ”NOT S Lida com grafos não conectados”, ”S Grafo”), 0.6
